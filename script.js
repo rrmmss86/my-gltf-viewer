@@ -36,7 +36,7 @@ scene.add(dir);
 const loader = new GLTFLoader();
 let mixer;
 
-loader.load('model.glb', (gltf) => {
+loader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb', (gltf) => {
   scene.add(gltf.scene);
 
   if (gltf.animations && gltf.animations.length) {
