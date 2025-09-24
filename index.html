@@ -1,21 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>MF 3D Model Viewer</title>
-<style>
-  body { margin: 0; overflow: hidden; }
-  canvas { display: block; }
-</style>
-</head>
-<body>
-<script type="module">
-  // Import modules from CDN
-  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
-  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/GLTFLoader.js';
-  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js';
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/loaders/GLTFLoader.js"></script>
 
-  // Scene setup
+<script>
+  // Everything is global now (THREE, OrbitControls, GLTFLoader)
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 100);
   camera.position.z = 3;
@@ -24,52 +12,39 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // Lighting
   const light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(5, 5, 5);
   scene.add(light);
 
-  // Load GLB model
-  const loader = new GLTFLoader();
+  const loader = new THREE.GLTFLoader();
   let model;
   loader.load('./LeePerrySmith.glb', (gltf) => {
-      model = gltf.scene;
-      scene.add(model);
-  }, undefined, (error) => {
-      console.error('Error loading GLB:', error);
+    model = gltf.scene;
+    scene.add(model);
   });
 
-  // Optional: OrbitControls (for testing)
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  // Mouse rotation
   let mouseX = 0, mouseY = 0;
   document.addEventListener('mousemove', (event) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+    mouseY = (event.clientY / window.innerHeight) * 2 - 1;
   });
 
-  // Animate loop
   function animate() {
-      requestAnimationFrame(animate);
-      if(model){
-          // Rotate model based on mouse
-          model.rotation.y = mouseX * Math.PI;
-          model.rotation.x = mouseY * Math.PI;
-      }
-      controls.update();
-      renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+    if(model){
+      model.rotation.y = mouseX * Math.PI;
+      model.rotation.x = mouseY * Math.PI;
+    }
+    controls.update();
+    renderer.render(scene, camera);
   }
   animate();
 
-  // Handle window resize
   window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
   });
 </script>
-</body>
-</html>
