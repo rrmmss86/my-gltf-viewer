@@ -10,10 +10,10 @@
 </head>
 <body>
 
-<!-- Global scripts (non-module) from a stable Three.js version -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/loaders/GLTFLoader.js"></script>
+<!-- Load Three.js and helpers -->
+<script src="./libs/three.core.min.js"></script>
+<script src="./libs/OrbitControls.js"></script>
+<script src="./libs/GLTFLoader.js"></script>
 
 <script>
   // Scene setup
@@ -27,25 +27,25 @@
 
   // Lighting
   const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(5, 5, 5);
+  light.position.set(5,5,5);
   scene.add(light);
 
-  // Load GLB model
+  // Load your MF.glb model
   const loader = new THREE.GLTFLoader();
   let model;
-  loader.load('./LeePerrySmith.glb', function(gltf){
+  loader.load('./MF.glb', function(gltf){
       model = gltf.scene;
       scene.add(model);
   }, undefined, function(error){
       console.error('Error loading GLB:', error);
   });
 
-  // OrbitControls (optional, for testing rotation)
+  // OrbitControls (optional camera control)
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
 
-  // Mouse-based rotation
+  // Mouse rotation
   let mouseX = 0, mouseY = 0;
   document.addEventListener('mousemove', function(event){
       mouseX = (event.clientX / window.innerWidth) * 2 - 1;
@@ -53,3 +53,24 @@
   });
 
   // Animation loop
+  function animate(){
+      requestAnimationFrame(animate);
+      if(model){
+          model.rotation.y = mouseX * Math.PI;
+          model.rotation.x = mouseY * Math.PI;
+      }
+      controls.update();
+      renderer.render(scene, camera);
+  }
+  animate();
+
+  // Handle window resize
+  window.addEventListener('resize', function(){
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+
+</body>
+</html>
