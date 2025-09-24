@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Three.js Cube Test</title>
-<style>
-  body, html { margin: 0; padding: 0; width: 100%; height: 100%; }
-  canvas { display: block; }
-</style>
+  <meta charset="UTF-8" />
+  <title>GLTF Viewer</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-<script type="module" src="script.js"></script>
+  <div id="canvas-container"></div>
+  <!-- Make sure type="module" and correct path -->
+  <script type="module" src="script.js?v=2"></script>
 </body>
 </html>
