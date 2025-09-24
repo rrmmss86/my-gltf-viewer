@@ -10,6 +10,10 @@ scene.background = new THREE.Color(0x111111);
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.set(0, 1.5, 3);
 
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -58,6 +62,7 @@ function animate() {
   const delta = clock.getDelta();
   if (mixer) mixer.update(delta);
   renderer.render(scene, camera);
+  controls.update();
 }
 animate();
 
