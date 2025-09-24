@@ -4,15 +4,12 @@ import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/exampl
 
 const container = document.getElementById('canvas-container');
 
-// Scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x111111);
 
-// Camera
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.set(0, 1.5, 3);
 
-// Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -32,27 +29,27 @@ const dir = new THREE.DirectionalLight(0xffffff, 0.8);
 dir.position.set(5, 10, 7);
 scene.add(dir);
 
-// Load GLB
+// Load public GLB
 const loader = new GLTFLoader();
 let mixer;
 
 loader.load('https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb', (gltf) => {
+  gltf.scene.scale.set(1.5, 1.5, 1.5);
   scene.add(gltf.scene);
 
   if (gltf.animations && gltf.animations.length) {
     mixer = new THREE.AnimationMixer(gltf.scene);
-
     gltf.animations.forEach((clip) => {
       const action = mixer.clipAction(clip);
       action.play();
-      action.paused = true; // Initially paused
+      action.paused = true; // initially paused
     });
   }
 }, undefined, (error) => {
-  console.error('Error loading GLTF:', error);
+  console.error('Error loading GLB:', error);
 });
 
-// Resize handling
+// Resize handler
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -71,14 +68,10 @@ function animate() {
 }
 animate();
 
-// Play/pause on mouseover
+// Mouseover play/pause
 renderer.domElement.addEventListener('mouseover', () => {
-  if (mixer) {
-    mixer._actions.forEach(action => action.paused = false);
-  }
+  if (mixer) mixer._actions.forEach(action => action.paused = false);
 });
 renderer.domElement.addEventListener('mouseout', () => {
-  if (mixer) {
-    mixer._actions.forEach(action => action.paused = true);
-  }
+  if (mixer) mixer._actions.forEach(action => action.paused = true);
 });
