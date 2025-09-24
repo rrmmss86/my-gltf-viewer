@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MF 3D Model</title>
+<title>MF 3D Model Viewer</title>
 <style>
   body { margin: 0; overflow: hidden; }
   canvas { display: block; }
@@ -10,6 +10,7 @@
 </head>
 <body>
 <script type="module">
+  // Import modules from CDN
   import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
   import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/GLTFLoader.js';
   import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js';
@@ -23,39 +24,47 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // Optional: light for nicer visuals
+  // Lighting
   const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(5,5,5);
+  light.position.set(5, 5, 5);
   scene.add(light);
 
-  // Load the GLB model
-  let model;
+  // Load GLB model
   const loader = new GLTFLoader();
-  loader.load('LeePerrySmith.glb', (gltf) => {
+  let model;
+  loader.load('./LeePerrySmith.glb', (gltf) => {
       model = gltf.scene;
       scene.add(model);
+  }, undefined, (error) => {
+      console.error('Error loading GLB:', error);
   });
 
-  // Mouse rotation variables
+  // Optional: OrbitControls (for testing)
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+
+  // Mouse rotation
   let mouseX = 0, mouseY = 0;
   document.addEventListener('mousemove', (event) => {
       mouseX = (event.clientX / window.innerWidth) * 2 - 1;
       mouseY = (event.clientY / window.innerHeight) * 2 - 1;
   });
 
-  // Animate function
+  // Animate loop
   function animate() {
       requestAnimationFrame(animate);
       if(model){
-          // Rotate based on mouse position
+          // Rotate model based on mouse
           model.rotation.y = mouseX * Math.PI;
           model.rotation.x = mouseY * Math.PI;
       }
+      controls.update();
       renderer.render(scene, camera);
   }
   animate();
 
-  // Handle resizing
+  // Handle window resize
   window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
