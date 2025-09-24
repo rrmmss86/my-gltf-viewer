@@ -17,11 +17,10 @@ container.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 const loader = new GLTFLoader();
-loader.load('/my-gltf-viewer/LeePerrySmith.glb', (gltf) => {
+loader.load('https://rrmmss86.github.io/my-gltf-viewer/LeePerrySmith.glb', (gltf) => {
   gltf.scene.scale.set(1.5, 1.5, 1.5);
   scene.add(gltf.scene);
 }, undefined, (error) => console.error('GLB load error:', error));
-
 
 function animate() {
   requestAnimationFrame(animate);
